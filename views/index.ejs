@@ -16,8 +16,13 @@
       >
         <% for (let i=0; i < newListItems.length; i++){ %>
         <div class="flex flex-row">
-          <input type="checkbox" class="mr-2 check" />
-          <p class="font-semibold item"><%= newListItems[i] %></p>
+          <input
+            type="checkbox"
+            class="mr-2 check"
+            id="<%= newListItems[i].id %>"
+            value="<%= newListItems[i].checked %>"
+          />
+          <p class="font-semibold item"><%= newListItems[i].item %></p>
         </div>
         <% } %>
       </ul>
@@ -39,6 +44,33 @@
         </button>
       </form>
     </div>
+    <script>
+      const check = `.check`;
+      $(document).ready(function () {
+        $(check).each(function (index, element) {
+          $(this).val() == 1
+            ? $(this).prop("checked", true)
+            : $(this).prop("checked", false);
+        });
+      });
+
+      $(check).on("change", (e) => {
+        e.preventDefault();
+        const id = e.target.id;
+        const ischecked = e.target.checked;
+        $.ajax({
+          type: "PUT",
+          url: "/",
+          data: { id: id, checked: ischecked ? 1 : 0 },
+          success: (response) => {
+            console.log(response);
+          },
+          error: (err) => {
+            console.log(err);
+          },
+        });
+      });
+    </script>
   </body>
   <%- include("footer") -%>
 </html>
